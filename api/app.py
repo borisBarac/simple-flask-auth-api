@@ -26,9 +26,11 @@ def add_user():
                 "data": None,
                 "error": "Bad request"
             }, 400
+            
         is_validated = validate_user(**user)
         if is_validated is not True:
-            return dict(message='Invalid data', data=None, error=is_validated), 400
+            return dict(message='Invalid data: {}'.format(is_validated), data=None, error=is_validated), 401
+
         user = User().create(**user)
         if not user:
             return {
@@ -40,6 +42,7 @@ def add_user():
             "message": "Successfully created new user",
             "data": user
         }, 201
+        
     except Exception as e:
         return {
             "message": "Something went wrong",
@@ -132,7 +135,7 @@ def disable_user(current_user):
     try:
         User().disable_account(current_user["_id"])
         return jsonify({
-            "message": "successfully disabled acount",
+            "message": "successfully disabled account",
             "data": None
         }), 204
     except Exception as e:
