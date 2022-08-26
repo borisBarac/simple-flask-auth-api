@@ -1,29 +1,15 @@
+import json
+from pathlib import Path
 import pytest
-from ..api.app import create_app
 
-@pytest.fixture()
-def app():
-    app = create_app()
-    app.config.update({
-        "TESTING": True,
-    })
+from api.app import app
 
-    # other setup can go here
+@pytest.fixture
+def client():
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    app.config["TESTING"] = True
+    yield app.test_client()  # tests run here
 
-    yield app
-
-    # clean up / reset resources here
-
-
-@pytest.fixture()
-def client(app):
-    return app.test_client()
-
-
-@pytest.fixture()
-def runner(app):
-    return app.test_cli_runner()
-
-def test_request_example(client):
-    response = client.get("/posts")
-    assert b"<h2>Hello, World!</h2>" in response.data
+def test_index(client):
+    response = client.get("/")
+    assert response.status_code == 200

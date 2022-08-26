@@ -1,9 +1,9 @@
 import jwt, os
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
-from validate import validate_email_and_password, validate_user
-from models import User
-from auth_middleware import token_required
+from .validate import validate_email_and_password, validate_user
+from .models import User
+from .auth_middleware import token_required
 
 load_dotenv()
 
