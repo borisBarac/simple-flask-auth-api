@@ -1,19 +1,9 @@
 """Application Models"""
 import bson
 from werkzeug.security import generate_password_hash, check_password_hash
-import os
-from dotenv import load_dotenv
-import pymongo
+from api import database
 
-# For some reason this needs to be made in file where it is used
-# when i move DB to new file, it loses attributes
-# i do not know why, my python is not that fancy
-
-load_dotenv()
-DATABASE_PORT = os.environ.get('DATABASE_PORT') or 27017
-client = pymongo.MongoClient("localhost", int(DATABASE_PORT))
-
-db = client.myDatabase
+db = database.db
 
 class User:
     """User Model"""
