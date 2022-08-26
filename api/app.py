@@ -43,10 +43,10 @@ def add_user():
             "data": user
         }, 201
         
-    except Exception as e:
+    except Exception as exception:
         return {
             "message": "Something went wrong",
-            "error": str(e),
+            "error": str(exception),
             "data": None
         }, 500
 
@@ -96,7 +96,6 @@ def login():
                 "error": str(e),
                 "data": None
         }, 500
-
 
 @app.route("/users/", methods=["GET"])
 @token_required
@@ -152,15 +151,6 @@ def forbidden(e):
         "error": str(e),
         "data": None
     }), 403
-
-@app.errorhandler(404)
-def forbidden(e):
-    return jsonify({
-        "message": "Endpoint Not Found",
-        "error": str(e),
-        "data": None
-    }), 404
-
 
 if __name__ == "__main__":
     app.run(debug=True)
