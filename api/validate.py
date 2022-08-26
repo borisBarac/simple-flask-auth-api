@@ -15,8 +15,6 @@ def validate_email(email: str):
     """Email Validator"""
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     return validate(email, regex)
-
-def validate_book(**args):
     """Book Validator"""
     if not args.get('title') or not args.get('image_url') \
         or not args.get('category') or not args.get('user_id'):
