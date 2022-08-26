@@ -1,17 +1,7 @@
 """Application Models"""
-import bson, os
-from dotenv import load_dotenv
-from pymongo import MongoClient
+import bson
 from werkzeug.security import generate_password_hash, check_password_hash
-
-load_dotenv()
-
-DATABASE_URL=os.environ.get('DATABASE_URL') or 'mongodb://localhost:27017/myDatabase'
-print(DATABASE_URL)
-client = MongoClient(DATABASE_URL)
-db = client.myDatabase
-
-print('DATABASE CONNECTED: {DATABASE_URL}')
+from . import db
 
 class User:
     """User Model"""
@@ -71,7 +61,6 @@ class User:
 
     def delete(self, user_id):
         """Delete a user"""
-        Books().delete_by_user_id(user_id)
         user = db.users.delete_one({"_id": bson.ObjectId(user_id)})
         user = self.get_by_id(user_id)
         return user
