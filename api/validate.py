@@ -8,7 +8,7 @@ def validate(data, regex):
 
 def validate_password(password: str):
     """Password Validator"""
-    reg = r"\b^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$\b"
+    reg = r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
     return validate(password, reg)
 
 def validate_email(email: str):
@@ -37,8 +37,7 @@ def validate_user(**args):
         }
     if not validate_password(args.get('password')):
         return {
-            'password': 'Password is invalid, Should be atleast 8 characters with \
-                upper and lower case letters, numbers and special characters'
+            'password': 'Password is invalid, Should be at least 8 characters with upper and lower case letters, numbers and special characters'
         }
     if not 2 <= len(args['name'].split(' ')) <= 30:
         return {
