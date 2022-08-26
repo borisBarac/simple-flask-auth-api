@@ -1,9 +1,16 @@
-import json
+# System imports
 from pathlib import Path
 import pytest
+import logging
+import sys
+from random import randint
 
+# APP imports
 from api.app import app
 from api.validate import validate_password
+
+logging.basicConfig(level=logging.DEBUG)
+my_logger = logging.getLogger()
 
 @pytest.fixture
 def client():
@@ -11,15 +18,23 @@ def client():
     app.config["TESTING"] = True
     yield app.test_client()  # tests run here
 
-def test_index(client):
-    response = client.get("/")
-    assert response.status_code == 200
-
 def test_register_user(client):
+    data = {
+        'name': 'John Doe',
+        'email':'testUser{}@email.com'.format(randint(0, sys.maxsize)),
+        'password':'pass1232321'
+    }
+
+    response = client.post("/users/", json = data)
+
+    message = response.json['message']
+    assert response.status_code == 201
+
+def test_register_user_error(client):
     data = {
         'name': 'Boris',
         'email':'email@email.com',
-        'password':'password1232321'
+        'password':'p'
     }
 
     response = client.post("/users/", json = data)
@@ -30,4 +45,8 @@ def test_register_user(client):
 
 def test_regex():
     res = validate_password("borSSSis123u2913")
-    assert res, True
+    assert res == True
+
+def test_index(client):
+    response = client.get("/")
+    assert response.status_code == 200
