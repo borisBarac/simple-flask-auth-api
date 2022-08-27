@@ -1,7 +1,7 @@
 import jwt
 from flask import request, jsonify
 from .validate import validate_email_and_password, validate_user
-from .models import User
+from .db_repository import UserRepository
 from .auth_middleware import token_required
 from .create_app import create_app
 
@@ -28,7 +28,7 @@ def add_user():
         if is_validated is not True:
             return dict(message='Invalid data: {}'.format(is_validated), data=None, error=is_validated), 401
 
-        user = User().create(**user)
+        user = UserRepository().create(**user)
         if not user:
             return {
                 "message": "User already exists",
@@ -61,7 +61,7 @@ def login():
         is_validated = validate_email_and_password(data.get('email'), data.get('password'))
         if is_validated is not True:
             return dict(message='Invalid data', data=None, error=is_validated), 400
-        user = User().login(
+        user = UserRepository().login(
             data["email"],
             data["password"]
         )
@@ -108,7 +108,7 @@ def update_user(current_user):
     try:
         user = request.json
         if user.get("name"):
-            user = User().update(current_user["_id"], user["name"])
+            user = UserRepository().update(current_user["_id"], user["name"])
             return jsonify({
                 "message": "successfully updated account",
                 "data": user
@@ -129,7 +129,7 @@ def update_user(current_user):
 @token_required
 def disable_user(current_user):
     try:
-        User().disable_account(current_user["_id"])
+        UserRepository().disable_account(current_user["_id"])
         return jsonify({
             "message": "successfully disabled account",
             "data": None

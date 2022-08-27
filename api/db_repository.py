@@ -5,7 +5,7 @@ from api import database
 
 db = database.db
 
-class User:
+class UserRepository:
     """User Model"""
     def __init__(self):
         return
