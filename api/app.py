@@ -1,16 +1,13 @@
-import jwt, os
-from dotenv import load_dotenv
-from flask import Flask, request, jsonify
+import jwt
+from flask import request, jsonify
 from .validate import validate_email_and_password, validate_user
 from .models import User
 from .auth_middleware import token_required
+from .create_app import create_app
 
-load_dotenv()
-
-app = Flask(__name__)
-SECRET_KEY = os.environ.get('SECRET_KEY') or 'this is a secret'
-print(SECRET_KEY)
-app.config['SECRET_KEY'] = SECRET_KEY
+app = create_app(__name__)
+if __name__ == "__main__":
+    app.run(debug=True)
 
 @app.route("/")
 def hello():
@@ -151,6 +148,3 @@ def forbidden(e):
         "error": str(e),
         "data": None
     }), 403
-
-if __name__ == "__main__":
-    app.run(debug=True)
